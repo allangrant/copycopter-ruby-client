@@ -47,6 +47,7 @@ module CopycopterClient
     # @param [Hash] data nested key-value pairs to be added as blurbs
     # @param [Hash] options unused part of the I18n API
     def store_translations(locale, data, options = {})
+      return unless locale == 'en'
       super
       store_item(locale, data)
     end
@@ -62,6 +63,21 @@ module CopycopterClient
     end
 
     def store_item(locale, data, scope = [])
+      # puts "##### in store_translations. locale: #{locale}"
+      # puts "data:"
+      # ap data
+      # puts "scope:"
+      # ap scope
+      # if data.respond_to?(:to_hash)
+      #   data.to_hash.each do |key, value|
+          # puts "recursing on key: #{key}"
+      #   end
+      # elsif data.respond_to?(:to_str)
+      #   key = ([locale] + scope).join('.')
+        # puts "[#{locale}] storing key: #{key} = #{data.to_str}"
+      # end
+      # puts "---------------------------"
+
       if data.respond_to?(:to_hash)
         data.to_hash.each do |key, value|
           store_item(locale, value, scope + [key])

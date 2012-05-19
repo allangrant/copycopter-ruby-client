@@ -58,11 +58,29 @@ module CopycopterClient
         @etag = response['ETag']
       end
     end
+    
+    
+    def exclude_unwanted(data)
+      data.inject({}) do |result, (raw_key, value)|
+        locale, key = raw_key.split '.', 2
+        exclude = false
+        exclude = true if locale != 'en'
+        exclude = true if key =~ /^(active_admin|devise|simple_form|meta_search)/
+        exclude = true if key =~ /^(errors|number|datetime|time|date|helpers|flash\.actions|activerecord|support|views|hello)/
+        result[raw_key] = value unless exclude
+        result
+      end
+    end
 
     # Uploads the given hash of blurbs as draft content.
     # @param data [Hash] the blurbs to upload
     # @raise [ConnectionError] if the connection fails
     def upload(data)
+      data = exclude_unwanted(data)
+      # puts "####################################################"
+      # puts "Uploading:"
+      # ap data
+      # puts "####################################################"
       connect do |http|
         response = http.post(uri('draft_blurbs'), data.to_json, 'Content-Type' => 'application/json')
         check response
