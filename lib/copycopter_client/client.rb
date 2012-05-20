@@ -65,8 +65,9 @@ module CopycopterClient
         locale, key = raw_key.split '.', 2
         exclude = false
         exclude = true if locale != 'en'
-        exclude = true if key =~ /^(active_admin|devise|simple_form|meta_search)/
-        exclude = true if key =~ /^(errors|number|datetime|time|date|helpers|flash\.actions|activerecord|support|views|hello)/
+        exclude = true if key =~ /^(active_admin|devise|simple_form|meta_search|activerecord)/
+        exclude = true if key =~ /^(errors|helpers|flash\.actions|support|views|attributes)/
+        exclude = true if key =~ /^(number|datetime|time|date|hello)/
         result[raw_key] = value unless exclude
         result
       end
